@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/fraunhoferhhi/vvenc.git"
-SCRIPT_COMMIT="14db0e7a78c3c165dfc2321e51e6ea9f53150171"
+SCRIPT_COMMIT="667bb8ca34f50e22aae3b8a74f19be9547e4742f"
 
 ffbuild_enabled() {
     [[ $TARGET != *32 ]] || return -1
@@ -29,7 +29,7 @@ ffbuild_dockerbuild() {
         -DBUILD_SHARED_LIBS=OFF -DVVENC_LIBRARY_ONLY=ON -DVVENC_ENABLE_WERROR=OFF -DVVENC_ENABLE_LINK_TIME_OPT=OFF -DEXTRALIBS="-lstdc++" "${armsimd[@]}" ..
 
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 }
 
 ffbuild_configure() {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/kcat/openal-soft.git"
-SCRIPT_COMMIT="f15e855145be2a6f82a73bf5ba1d94456668011c"
+SCRIPT_COMMIT="a7d862aba145f2efc3bd01b584cb91380ba8aa3f"
 
 ffbuild_enabled() {
     (( $(ffbuild_ffver) > 501 )) || return -1
@@ -11,15 +11,18 @@ ffbuild_enabled() {
 ffbuild_dockerbuild() {
     mkdir cm_build && cd cm_build
 
+    export CFLAGS="$CFLAGS -include stdlib.h"
+    export CXXFLAGS="$CXXFLAGS -include cstdlib"
+
     cmake -DCMAKE_TOOLCHAIN_FILE="$FFBUILD_CMAKE_TOOLCHAIN" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$FFBUILD_PREFIX" \
         -DLIBTYPE=STATIC -DALSOFT_UTILS=OFF -DALSOFT_EXAMPLES=OFF  ..
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 
-    echo "Libs.private: -lstdc++" >> "$FFBUILD_PREFIX"/lib/pkgconfig/openal.pc
+    echo "Libs.private: -lstdc++" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/openal.pc
 
     if [[ $TARGET == win* ]]; then
-        echo "Libs.private: -lole32 -luuid" >> "$FFBUILD_PREFIX"/lib/pkgconfig/openal.pc
+        echo "Libs.private: -lole32 -luuid" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/openal.pc
     fi
 }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://chromium.googlesource.com/webm/libwebp"
-SCRIPT_COMMIT="c41d168d25f3b8be3eeb47da213e181e79f79d7b"
+SCRIPT_COMMIT="9f14c2605b9c4d993f10ee5a8254f4645ec3ddef"
 
 ffbuild_enabled() {
     return 0
@@ -37,7 +37,7 @@ ffbuild_dockerbuild() {
 
     ./configure "${myconf[@]}"
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 }
 
 ffbuild_configure() {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/mm2/Little-CMS.git"
-SCRIPT_COMMIT="59feb9ec4995e3d59dc78ae1f2cb7643c193ccd1"
+SCRIPT_COMMIT="5cdf3044d290e556beddc197b350aa88cc9bf00f"
 
 ffbuild_enabled() {
     return 0
@@ -31,5 +31,5 @@ ffbuild_dockerbuild() {
 
     meson setup "${myconf[@]}" ..
     ninja -j$(nproc)
-    ninja install
+    DESTDIR="$FFBUILD_DESTDIR" ninja install
 }

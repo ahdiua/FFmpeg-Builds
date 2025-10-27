@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/harfbuzz/harfbuzz.git"
-SCRIPT_COMMIT="dbbf6def3b4b33965febd301bb7f7f00ad0856cf"
+SCRIPT_COMMIT="41c8b99beef781f42f7fce7ec75efac80c815b85"
 
 ffbuild_enabled() {
     return 0
@@ -35,9 +35,9 @@ ffbuild_dockerbuild() {
 
     meson setup "${myconf[@]}" ..
     ninja -j"$(nproc)"
-    ninja install
+    DESTDIR="$FFBUILD_DESTDIR" ninja install
 
-    echo "Libs.private: -lpthread" >> "$FFBUILD_PREFIX"/lib/pkgconfig/harfbuzz.pc
+    echo "Libs.private: -lpthread" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/harfbuzz.pc
 }
 
 ffbuild_configure() {

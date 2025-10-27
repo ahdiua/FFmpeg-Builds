@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [win64,linux64,linuxarm64]
-        variant: [lgpl,gpl 6.1,gpl 5.1,lgpl 6.1,lgpl 5.1,gpl-shared,lgpl-shared,gpl-shared 6.1,gpl-shared 5.1,lgpl-shared 6.1,lgpl-shared 5.1]
+        variant: [lgpl,gpl 6.1,gpl 8.0,lgpl 6.1,lgpl 8.0,gpl-shared,lgpl-shared,gpl-shared 6.1,gpl-shared 8.0,lgpl-shared 6.1,lgpl-shared 8.0]
         quickbuild: [1]
         include:
           - target: win64
@@ -32,7 +32,7 @@ jobs:
             quickbuild: ''
     steps:
       - name: Free Disk-Space
-        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
+        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install buildx

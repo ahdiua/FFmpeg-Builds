@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/Netflix/vmaf.git"
-SCRIPT_COMMIT="b9ac69e6c4231fad0465021f9e31a841a18261db"
+SCRIPT_COMMIT="1b08bb4da533fe3bc08700e4c1adb45f5adccc0b"
 
 ffbuild_enabled() {
     return 0
@@ -35,9 +35,9 @@ ffbuild_dockerbuild() {
 
     meson "${myconf[@]}" ../libvmaf || cat meson-logs/meson-log.txt
     ninja -j"$(nproc)"
-    ninja install
+    DESTDIR="$FFBUILD_DESTDIR" ninja install
 
-    sed -i 's/Libs.private:/Libs.private: -lstdc++/; t; $ a Libs.private: -lstdc++' "$FFBUILD_PREFIX"/lib/pkgconfig/libvmaf.pc
+    sed -i 's/Libs.private:/Libs.private: -lstdc++/; t; $ a Libs.private: -lstdc++' "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libvmaf.pc
 }
 
 ffbuild_configure() {
