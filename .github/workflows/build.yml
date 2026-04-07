@@ -59,7 +59,7 @@ jobs:
         id: imagename
         run: |
           IMG="${GITHUB_REPOSITORY,,}/base"
-          IMG="${IMG/ /-}"
+          IMG="${IMG// /-}"
           echo "name=ghcr.io/${IMG}" >> $GITHUB_OUTPUT
           echo "rawname=${IMG#*/}" >> $GITHUB_OUTPUT
       - name: Stop Commands
@@ -139,7 +139,7 @@ jobs:
         id: imagename
         run: |
           IMG="${GITHUB_REPOSITORY,,}/base-${{ matrix.target }}"
-          IMG="${IMG/ /-}"
+          IMG="${IMG// /-}"
           echo "name=ghcr.io/${IMG}" >> $GITHUB_OUTPUT
           echo "rawname=${IMG#*/}" >> $GITHUB_OUTPUT
           echo "gh_repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
@@ -176,7 +176,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [win64,linux64]
-        variant: [nonfree,nonfree-shared,nonfree 8.0,nonfree-shared 8.0]
+        variant: [nonfree,nonfree-shared,nonfree 8.1,nonfree-shared 8.1]
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -196,7 +196,7 @@ jobs:
         id: imagename
         run: |
           IMG="${GITHUB_REPOSITORY,,}/${{ matrix.target }}-${{ matrix.variant }}"
-          IMG="${IMG/ /-}"
+          IMG="${IMG// /-}"
           echo "name=ghcr.io/${IMG}" >> $GITHUB_OUTPUT
           echo "rawname=${IMG#*/}" >> $GITHUB_OUTPUT
       - name: Get download cache key
@@ -242,7 +242,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [win64,linux64]
-        variant: [nonfree,nonfree-shared,nonfree 8.0,nonfree-shared 8.0]
+        variant: [nonfree,nonfree-shared,nonfree 8.1,nonfree-shared 8.1]
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
