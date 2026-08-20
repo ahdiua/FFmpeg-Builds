@@ -176,7 +176,7 @@ jobs:
       matrix:
         runner: [ubuntu-latest]
         target: [linux64,win64]
-        variant: [nonfree,gpl,nonfree 8.1,gpl 8.1]
+        variant: [nonfree,gpl,nonfree 9.0,gpl 9.0]
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -242,7 +242,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [linux64,win64]
-        variant: [nonfree,gpl,nonfree 8.1,gpl 8.1]
+        variant: [nonfree,gpl,nonfree 9.0,gpl 9.0]
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -294,7 +294,8 @@ jobs:
           NAME="Auto-Build $RELDATE"
           TAGNAME="autobuild-$(date +'%Y-%m-%d-%H-%M')"
           (cd artifacts && sha256sum *.{zip,tar.xz} > checksums.sha256)
-          gh release create "$TAGNAME" --target "master" --title "$NAME" artifacts/*.{zip,tar.xz} artifacts/checksums.*
+          ./util/release_body.sh "$TAGNAME" artifacts/*.{zip,tar.xz} > release_body.md
+          gh release create "$TAGNAME" --target "master" --title "$NAME" --notes-file release_body.md artifacts/*.{zip,tar.xz} artifacts/checksums.*
           echo "tag_name=${TAGNAME}" >> $GITHUB_OUTPUT
           echo "rel_date=${RELDATE}" >> $GITHUB_OUTPUT
         env:
@@ -309,9 +310,10 @@ jobs:
           (cd latest_artifacts && sha256sum *.{zip,tar.xz} > checksums.sha256)
           NAME="Latest Auto-Build (${{ steps.create_release.outputs.rel_date }})"
           TAGNAME="latest"
+          ./util/release_body.sh "$TAGNAME" latest_artifacts/*.{zip,tar.xz} > latest_body.md
           gh release delete --cleanup-tag --yes "$TAGNAME" || true
           sleep 15
-          gh release create "$TAGNAME" --target "master" --title "$NAME" latest_artifacts/*
+          gh release create "$TAGNAME" --target "master" --title "$NAME" --notes-file latest_body.md latest_artifacts/*
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Update Wiki
