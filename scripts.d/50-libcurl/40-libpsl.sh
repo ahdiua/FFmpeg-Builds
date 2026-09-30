@@ -1,10 +1,18 @@
 #!/bin/bash
 
-SCRIPT_REPO="https://github.com/fribidi/fribidi.git"
-SCRIPT_COMMIT="4c914a92e94a9fe4f30ae83a1130099841566448"
+SCRIPT_REPO="https://github.com/rockdaboot/libpsl.git"
+SCRIPT_COMMIT="a629c831d09011f76974d931be7f6167be90673e"
+
+SCRIPT_REPO2="https://github.com/publicsuffix/list.git"
+SCRIPT_COMMIT2="a179a48c465e818cfd8d626691cb317985da87fb"
 
 ffbuild_enabled() {
     return 0
+}
+
+ffbuild_dockerdl() {
+    default_dl .
+    echo "git-mini-clone \"$SCRIPT_REPO2\" \"$SCRIPT_COMMIT2\" list"
 }
 
 ffbuild_dockerbuild() {
@@ -14,9 +22,10 @@ ffbuild_dockerbuild() {
         --prefix="$FFBUILD_PREFIX"
         --buildtype=release
         --default-library=static
-        -Dbin=false
-        -Ddocs=false
+        -Druntime=no
+        -Dbuiltin=true
         -Dtests=false
+        -Ddocs=false
     )
 
     if [[ $TARGET == win* || $TARGET == linux* ]]; then
@@ -28,17 +37,7 @@ ffbuild_dockerbuild() {
         return -1
     fi
 
-    meson "${myconf[@]}" ..
+    meson setup "${myconf[@]}" ..
     ninja -j$(nproc)
     DESTDIR="$FFBUILD_DESTDIR" ninja install
-
-    sed -i 's/Cflags:/Cflags: -DFRIBIDI_LIB_STATIC/' "$FFBUILD_DESTPREFIX"/lib/pkgconfig/fribidi.pc
-}
-
-ffbuild_configure() {
-    echo --enable-libfribidi
-}
-
-ffbuild_unconfigure() {
-    echo --disable-libfribidi
 }
